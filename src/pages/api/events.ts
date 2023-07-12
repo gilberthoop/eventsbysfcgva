@@ -15,6 +15,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const collection = database.collection("events");
 
     switch (req.method) {
+      case "GET":
+        await fetchEvents(req, res, collection);
+        break;
       case "POST":
         await submitEvent(req, res, collection);
         break;
@@ -28,6 +31,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ message: "Sorry, we are unable to process your request." });
   } finally {
     await client.close();
+  }
+};
+
+const fetchEvents = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  collection: Collection
+) => {
+  try {
+    const events = await collection.find().toArray();
+    res.status(200).json({ events });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving events" });
   }
 };
 
