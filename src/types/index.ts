@@ -4,7 +4,13 @@ export interface SFCEvent {
   description: string;
   venue: string;
   address: string;
-  date: string;
+  startDate: string;
   startTime: string;
+  endDate: string;
   endTime: string;
+}
+
+export interface DateTime {
+  date: string;
+  time: string;
 }

@@ -1,6 +1,26 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import "@/styles/globals.css";
+import "@/styles/form.css";
+import type { AppProps } from "next/app";
+import { Poppins } from "next/font/google";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const poppins = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "Poppins, sans-serif",
+  },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <ThemeProvider theme={theme}>
+      <main className={poppins.className}>
+        <Component {...pageProps} />
+      </main>
+    </ThemeProvider>
+  );
 }
