@@ -10,6 +10,12 @@ export interface SFCEvent {
   endTime: string;
 }
 
+export interface SFCEventState {
+  data: SFCEvent[];
+  isLoading: boolean;
+  error: string | null;
+}
+
 export interface DateTime {
   date: string;
   time: string;
