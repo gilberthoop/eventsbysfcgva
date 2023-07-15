@@ -17,12 +17,12 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="p-6 sm:px-10 sm:py-10 md:px-16 lg:px-40 lg:py-12">
+    <section className="p-6 sm:px-10 sm:py-10 md:px-16 lg:px-22 lg:py-12">
       <header className="text-center text-white text-2xl sm:text-4xl my-8">
         Upcoming Events
       </header>
 
-      <section className="flex flex-col md:flex-row gap-y-2 md:gap-x-6 lg:gap-x-10">
+      <section className="flex flex-wrap flex-col justify-center sm:flex-row gap-y-2 md:gap-x-8 lg:gap-x-14">
         {events &&
           events.map((event, index) => <Event key={index} details={event} />)}
       </section>
