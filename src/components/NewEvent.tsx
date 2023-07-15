@@ -1,10 +1,14 @@
 import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { SFCEvent, DateTime } from "@/types";
 import { sanitizeInput } from "@/utils/input-validation";
+
+const IMG_SIZE_LIMIT = 300000;
 
 function handleDateTimeParsing(dateTime: Date): DateTime {
   const date = dateTime.toLocaleString("en-US", {
@@ -24,6 +28,7 @@ function handleDateTimeParsing(dateTime: Date): DateTime {
 
 const NewEvent: React.FC = () => {
   const initialFormState: SFCEvent = {
+    coverPhoto: "",
     host: "",
     name: "",
     description: "",
@@ -38,6 +43,9 @@ const NewEvent: React.FC = () => {
   const [formState, setFormState] = useState<SFCEvent>(initialFormState);
   const [response, setResponse] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [imgSizeError, setImgSizeError] = useState("");
+
+  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,6 +55,8 @@ const NewEvent: React.FC = () => {
       setFormState(initialFormState);
       setResponse(response.data?.message);
       setHasError(false);
+      setImgSizeError("");
+      router.push("/");
     } catch (e) {
       console.error(e);
       setResponse("Unable to add new event.");
@@ -64,6 +74,37 @@ const NewEvent: React.FC = () => {
       ...prevState,
       [name]: sanitizedInput,
     }));
+  }
+
+  /**
+   * Handle photo upload to avoid large image file size.
+   * @param event
+   */
+  function handlePhotoUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, files } = event.target;
+    if (!files) return;
+    const photo = files[0];
+    const reader = new FileReader();
+
+    if (photo.size > IMG_SIZE_LIMIT) {
+      setImgSizeError(
+        "Image file size is too large! Please reduce file size or select a different one."
+      );
+      setFormState((prevState) => ({
+        ...prevState,
+        coverPhoto: "",
+      }));
+    } else {
+      setImgSizeError("");
+      reader.readAsDataURL(photo);
+      reader.onload = () => {
+        const imageFile = reader.result;
+        setFormState((prevState) => ({
+          ...prevState,
+          [name]: imageFile,
+        }));
+      };
+    }
   }
 
   function onStartDateChange(dateValue: any) {
@@ -112,6 +153,33 @@ const NewEvent: React.FC = () => {
             {response}
           </h2>
         )}
+        <div className="form__group">
+          <label htmlFor="coverPhoto">Cover Photo (optional):</label>
+          {imgSizeError && (
+            <span className="text-red-500 text-center py-2">
+              {imgSizeError}
+            </span>
+          )}
+          <input
+            type="file"
+            name="coverPhoto"
+            accept="image/*"
+            onChange={handlePhotoUpload}
+          />
+        </div>
+
+        {formState.coverPhoto && (
+          <div className="form__group">
+            <Image
+              src={formState.coverPhoto}
+              alt={formState.name}
+              width={0}
+              height={0}
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
+        )}
+
         <div className="form__group">
           <label htmlFor="host">Host:</label>
           <input
