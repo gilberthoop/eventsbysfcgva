@@ -1,0 +1,44 @@
+.main {
+  @apply p-6;
+  @apply sm:p-10;
+  @apply md:px-14;
+  @apply lg:px-16 lg:py-12;
+}
+
+.main__header {
+  @apply text-center text-white text-2xl my-8;
+  @apply sm:text-4xl;
+}
+
+.main__body {
+  @apply flex flex-wrap flex-col justify-center gap-y-2;
+  @apply sm:flex-row;
+  @apply md:gap-x-1 md:gap-y-1;
+  @apply lg:gap-x-1;
+}
+
+.events {
+  @apply my-4 bg-white rounded text-sm h-fit w-full flex flex-col justify-between;
+  @apply sm:w-8/12;
+  @apply md:my-0 md:text-base md:w-5/12;
+  @apply lg:w-1/4;
+}
+
+.events__card {
+  @apply px-4 sm:px-10 py-2;
+  @apply sm:px-10 sm:py-4;
+  @apply md:px-8;
+}
+
+.events__card-header {
+  @apply text-center text-xl font-black pb-4;
+  @apply lg:text-2xl;
+}
+
+.events__schedule {
+  @apply text-center border-t-2 py-4;
+}
+
+.events__card-section {
+  @apply text-center border-t-2 py-4;
+}
