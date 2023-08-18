@@ -1,5 +1,4 @@
 export interface SFCEvent {
-  coverPhoto?: string;
   host: string;
   name: string;
   description: string;
