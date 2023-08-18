@@ -3,7 +3,7 @@ import { Action } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { RootState, fetchEvents } from "@/store";
-import EventCardMini from "@/components/events/EventCardMini";
+import EventCard from "@/components/events/EventCard";
 import { SFCEvent } from "@/types";
 
 const UpcomingEvents: React.FC = () => {
@@ -17,23 +17,13 @@ const UpcomingEvents: React.FC = () => {
   }, []);
 
   return (
-    <section className="main">
-      <header className="main__header">Upcoming Events</header>
+    <section className="event">
+      <header className="event__header">Upcoming Events</header>
 
-      <section className="main__body">
-        {/* {events &&
+      <section className="event__body">
+        {events &&
           events.map((event, index) => (
             <EventCard key={index} details={event} />
-          ))} */}
-
-        {events &&
-          events.map(({ coverPhoto, host, name }, index) => (
-            <EventCardMini
-              key={index}
-              coverPhoto={coverPhoto}
-              host={host}
-              name={name}
-            />
           ))}
       </section>
     </section>

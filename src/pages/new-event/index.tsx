@@ -1,4 +1,4 @@
-import NewEvent from "@/components/NewEvent";
+import NewEvent from "@/components/events/NewEvent";
 
 function NewEventPage() {
   return (
