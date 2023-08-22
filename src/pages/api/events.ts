@@ -5,14 +5,16 @@ import { SFCEvent } from "@/types";
 
 config();
 const uri = process.env.MONGODB_URI || "";
+const databaseName = process.env.DATABASE_NAME || "";
+const dbCollectionEvents = process.env.DB_COLLECTION_EVENTS || "";
 const client = new MongoClient(uri);
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await client.connect();
-    const database = client.db("sfcgvaevents");
-    const collection = database.collection("events");
+    const database = client.db(databaseName);
+    const collection = database.collection(dbCollectionEvents);
 
     switch (req.method) {
       case "GET":
