@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { MongoClient, Collection, ObjectId } from "mongodb";
+import { MongoClient, Collection, ObjectId, Condition } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { SFCEvent } from "@/types";
 
@@ -22,6 +22,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         break;
       case "POST":
         await submitEvent(req, res, collection);
+        break;
+      case "DELETE":
+        await deleteEvent(req, res, collection);
         break;
       default:
         return res.status(405).end();
@@ -66,5 +69,28 @@ const submitEvent = async (
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unable to add new event." });
+  }
+};
+
+const deleteEvent = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  collection: Collection
+) => {
+  try {
+    const { id } = req.query;
+
+    const deleteResult = await collection.findOneAndDelete({
+      _id: id as Condition<ObjectId>,
+    });
+
+    if (deleteResult.value) {
+      res.status(200).json(deleteResult.value);
+    } else {
+      res.status(404).json({ message: "Event not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error deleting event" });
   }
 };
