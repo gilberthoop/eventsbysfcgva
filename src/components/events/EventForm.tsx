@@ -1,30 +1,30 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { CircularProgress } from "@mui/material";
 import { SFCEvent, DateTime } from "@/types";
 import { sanitizeInput } from "@/utils/input-validation";
 import { HOSTS } from "@/utils/global-constants";
 
-function handleDateTimeParsing(dateTime: Date): DateTime {
-  const date = dateTime.toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const time = dateTime.toLocaleString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
-
-  return { date, time };
+interface EventFormProps {
+  formTitle: string;
+  action: string;
+  loading: boolean;
+  hasError: boolean;
+  response: string;
+  onNewEventSubmit?: (eventParams: SFCEvent) => void;
 }
 
-const NewEvent: React.FC = () => {
+const EventForm: React.FC<EventFormProps> = ({
+  formTitle,
+  action,
+  loading,
+  hasError,
+  response,
+  onNewEventSubmit,
+}) => {
   const initialFormState: SFCEvent = {
     host: "",
     name: "",
@@ -38,24 +38,24 @@ const NewEvent: React.FC = () => {
   };
 
   const [formState, setFormState] = useState<SFCEvent>(initialFormState);
-  const [response, setResponse] = useState("");
-  const [hasError, setHasError] = useState(false);
-
   const router = useRouter();
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const submitNewEvent = () => {
+    if (!onNewEventSubmit) return;
+    onNewEventSubmit(formState);
+    setFormState(initialFormState);
+    router.push("/");
+  };
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    try {
-      const response = await axios.post("/api/events", formState);
-      setFormState(initialFormState);
-      setResponse(response.data?.message);
-      setHasError(false);
-      router.push("/");
-    } catch (e) {
-      console.error(e);
-      setResponse("Unable to add new event.");
-      setHasError(true);
+    switch (action) {
+      case "add":
+        submitNewEvent();
+        break;
+      default:
+        break;
     }
   }
 
@@ -106,7 +106,7 @@ const NewEvent: React.FC = () => {
   return (
     <main>
       <header className="pb-6 text-white text-center">
-        <h1 className="text-3xl">Add a new event</h1>
+        <h1 className="text-3xl">{formTitle}</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="form">
@@ -199,12 +199,28 @@ const NewEvent: React.FC = () => {
           </LocalizationProvider>
         </div>
 
-        <button type="submit" className="form__button">
-          Submit
+        <button type="submit" className="form__button" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : "Submit"}
         </button>
       </form>
     </main>
   );
 };
 
-export default NewEvent;
+function handleDateTimeParsing(dateTime: Date): DateTime {
+  const date = dateTime.toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const time = dateTime.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+
+  return { date, time };
+}
+
+export default EventForm;
