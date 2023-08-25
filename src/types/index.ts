@@ -20,3 +20,8 @@ export interface DateTime {
   date: string;
   time: string;
 }
+
+export enum FormAction {
+  Add = "add",
+  Edit = "edit",
+}

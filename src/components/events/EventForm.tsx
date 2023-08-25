@@ -1,29 +1,33 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { CircularProgress } from "@mui/material";
-import { SFCEvent, DateTime } from "@/types";
+import { SFCEvent, DateTime, FormAction } from "@/types";
 import { sanitizeInput } from "@/utils/input-validation";
 import { HOSTS } from "@/utils/global-constants";
 
 interface EventFormProps {
   formTitle: string;
-  action: string;
+  formData?: SFCEvent;
+  action: FormAction;
   loading: boolean;
   hasError: boolean;
   response: string;
   onNewEventSubmit?: (eventParams: SFCEvent) => void;
+  onEditEventSubmit?: (eventParams: SFCEvent) => void;
 }
 
 const EventForm: React.FC<EventFormProps> = ({
   formTitle,
+  formData,
   action,
   loading,
   hasError,
   response,
   onNewEventSubmit,
+  onEditEventSubmit,
 }) => {
   const initialFormState: SFCEvent = {
     host: "",
@@ -40,6 +44,15 @@ const EventForm: React.FC<EventFormProps> = ({
   const [formState, setFormState] = useState<SFCEvent>(initialFormState);
   const router = useRouter();
 
+  /**
+   * When editing, populate form state with the exisiting form data
+   */
+  useEffect(() => {
+    if (action === FormAction.Edit && formData) {
+      setFormState(formData);
+    }
+  }, [formData]);
+
   const submitNewEvent = () => {
     if (!onNewEventSubmit) return;
     onNewEventSubmit(formState);
@@ -47,13 +60,21 @@ const EventForm: React.FC<EventFormProps> = ({
     router.push("/");
   };
 
+  const submitEditEvent = () => {
+    if (!onEditEventSubmit) return;
+    onEditEventSubmit(formState);
+    router.push("/");
+  };
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     switch (action) {
-      case "add":
+      case FormAction.Add:
         submitNewEvent();
         break;
+      case FormAction.Edit:
+        submitEditEvent();
       default:
         break;
     }
@@ -199,9 +220,20 @@ const EventForm: React.FC<EventFormProps> = ({
           </LocalizationProvider>
         </div>
 
-        <button type="submit" className="form__button" disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "Submit"}
-        </button>
+        <div className="flex justify-between my-4">
+          {action === FormAction.Edit && (
+            <button
+              className="form__button form__button--cancel"
+              onClick={() => router.push("/")}
+            >
+              {loading ? <CircularProgress size={24} /> : "Cancel"}
+            </button>
+          )}
+
+          <button type="submit" className="form__button" disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : "Submit"}
+          </button>
+        </div>
       </form>
     </main>
   );

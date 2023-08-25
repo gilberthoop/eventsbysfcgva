@@ -29,5 +29,11 @@
 }
 
 .form__button {
-  @apply w-fit rounded outline py-2 px-10 my-4 mx-auto;
+  @apply w-fit rounded outline py-2 px-6;
+  @apply md:px-10;
+}
+
+.form__button--cancel {
+  background-color: rgb(182, 30, 30);
+  color: white;
 }
