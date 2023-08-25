@@ -18,10 +18,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case "GET":
-        await fetchEvents(req, res, collection);
+        if (req.query.id) {
+          await fetchEvent(req, res, collection);
+        } else {
+          await fetchEvents(req, res, collection);
+        }
         break;
       case "POST":
         await submitEvent(req, res, collection);
+        break;
+      case "PUT":
+        await updateEvent(req, res, collection);
         break;
       case "DELETE":
         await deleteEvent(req, res, collection);
@@ -53,6 +60,26 @@ const fetchEvents = async (
   }
 };
 
+const fetchEvent = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  collection: Collection
+) => {
+  try {
+    const { id } = req.query;
+    const event = await collection.findOne({ _id: id as Condition<ObjectId> });
+
+    if (event) {
+      res.status(200).json(event);
+    } else {
+      res.status(404).json({ message: "Event not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving event" });
+  }
+};
+
 const submitEvent = async (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -69,6 +96,32 @@ const submitEvent = async (
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unable to add new event." });
+  }
+};
+
+const updateEvent = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  collection: Collection
+) => {
+  try {
+    const { id } = req.query;
+    const updatedEvent = { ...req.body };
+
+    const updateResult = await collection.findOneAndUpdate(
+      { _id: id as Condition<ObjectId> },
+      { $set: updatedEvent },
+      { returnDocument: "after" }
+    );
+
+    if (updateResult.value) {
+      res.status(200).json(updateResult.value);
+    } else {
+      res.status(404).json({ message: "Event not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating event." });
   }
 };
 
