@@ -1,12 +1,10 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { CircularProgress } from "@mui/material";
 import { SFCEvent, DateTime, FormAction } from "@/types";
 import { sanitizeInput } from "@/utils/input-validation";
 import { HOSTS } from "@/utils/global-constants";
+import AppDateTimePicker from "@/components/AppDateTimePicker";
 
 interface EventFormProps {
   formTitle: string;
@@ -37,8 +35,10 @@ const EventForm: React.FC<EventFormProps> = ({
     address: "",
     startDate: "",
     startTime: "",
+    isoStartScheduleFormat: "",
     endDate: "",
     endTime: "",
+    isoEndScheduleFormat: "",
   };
 
   const [formState, setFormState] = useState<SFCEvent>(initialFormState);
@@ -97,11 +97,13 @@ const EventForm: React.FC<EventFormProps> = ({
   function onStartDateChange(dateValue: any) {
     try {
       if (dateValue && dateValue.toDate()) {
+        const isoDateTimeFormat = new Date(dateValue.toDate()).toISOString();
         const { date, time } = handleDateTimeParsing(dateValue.toDate());
         setFormState((prevState) => ({
           ...prevState,
           startDate: date,
           startTime: time,
+          isoStartScheduleFormat: isoDateTimeFormat,
         }));
       }
     } catch (e) {
@@ -112,11 +114,13 @@ const EventForm: React.FC<EventFormProps> = ({
   function onEndDateChange(dateValue: any) {
     try {
       if (dateValue && dateValue.toDate()) {
+        const isoDateTimeFormat = new Date(dateValue.toDate()).toISOString();
         const { date, time } = handleDateTimeParsing(dateValue.toDate());
         setFormState((prevState) => ({
           ...prevState,
           endDate: date,
           endTime: time,
+          isoEndScheduleFormat: isoDateTimeFormat,
         }));
       }
     } catch (e) {
@@ -203,32 +207,28 @@ const EventForm: React.FC<EventFormProps> = ({
         </div>
 
         <div className="form__group mt-3">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Select the event start date and time (PST)"
-              onChange={onStartDateChange}
-            />
-          </LocalizationProvider>
+          <AppDateTimePicker
+            label="Select the event start date and time (PST)"
+            scheduleISOformat={formState.isoStartScheduleFormat}
+            onDateChange={onStartDateChange}
+          />
         </div>
 
         <div className="form__group my-3">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Select the event end date and time (PST)"
-              onChange={onEndDateChange}
-            />
-          </LocalizationProvider>
+          <AppDateTimePicker
+            label="Select the event end date and time (PST)"
+            scheduleISOformat={formState.isoEndScheduleFormat}
+            onDateChange={onEndDateChange}
+          />
         </div>
 
         <div className="flex justify-between my-4">
-          {action === FormAction.Edit && (
-            <button
-              className="form__button form__button--cancel"
-              onClick={() => router.push("/")}
-            >
-              {loading ? <CircularProgress size={24} /> : "Cancel"}
-            </button>
-          )}
+          <button
+            className="form__button form__button--cancel"
+            onClick={() => router.push("/")}
+          >
+            {loading ? <CircularProgress size={24} /> : "Cancel"}
+          </button>
 
           <button type="submit" className="form__button" disabled={loading}>
             {loading ? <CircularProgress size={24} /> : "Submit"}

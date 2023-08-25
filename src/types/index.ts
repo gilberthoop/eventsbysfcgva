@@ -6,8 +6,10 @@ export interface SFCEvent {
   address: string;
   startDate: string;
   startTime: string;
+  isoStartScheduleFormat: string;
   endDate: string;
   endTime: string;
+  isoEndScheduleFormat: string;
 }
 
 export interface SFCEventState {
