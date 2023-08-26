@@ -1,30 +1,29 @@
-import { useEffect } from "react";
-import { Action } from "redux";
-import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState, fetchEvents } from "@/store";
+import { CircularProgress } from "@mui/material";
 import EventCard from "@/components/events/EventCard";
-import { SFCEvent } from "@/types";
+import useEvents from "@/hooks/use-events";
 
 const UpcomingEvents: React.FC = () => {
-  const { data: events } = useSelector(
-    (state: { events: { data: SFCEvent[] } }) => state.events
-  );
-  const dispatch: ThunkDispatch<RootState, unknown, Action> = useDispatch();
+  const { events, isLoading } = useEvents();
 
-  useEffect(() => {
-    dispatch(fetchEvents());
-  }, []);
+  const fetchEventsResult = isLoading ? (
+    <CircularProgress size={64} className="text-white" />
+  ) : (
+    events &&
+    events.map((event, index) => <EventCard key={index} details={event} />)
+  );
+
+  const noUpcomingEvents = (
+    <div className="text-2xl text-center text-white">
+      There are currently no upcoming events. Stay tuned!
+    </div>
+  );
 
   return (
     <section className="event">
       <header className="event__header">Upcoming Events</header>
 
       <section className="event__body">
-        {events &&
-          events.map((event, index) => (
-            <EventCard key={index} details={event} />
-          ))}
+        {events ? fetchEventsResult : noUpcomingEvents}
       </section>
     </section>
   );
