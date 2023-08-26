@@ -49,6 +49,7 @@ const useEventRequestHandler = () => {
       setResponse(response.data?.message);
       setHasError(false);
       setLoading(false);
+      router.push("/");
     } catch (e) {
       console.error(e);
       setResponse("Unable to edit event");

@@ -57,13 +57,11 @@ const EventForm: React.FC<EventFormProps> = ({
     if (!onNewEventSubmit) return;
     onNewEventSubmit(formState);
     setFormState(initialFormState);
-    router.push("/");
   };
 
   const submitEditEvent = () => {
     if (!onEditEventSubmit) return;
     onEditEventSubmit(formState);
-    router.push("/");
   };
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
