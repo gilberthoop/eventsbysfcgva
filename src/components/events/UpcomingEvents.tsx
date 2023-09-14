@@ -1,9 +1,16 @@
 import { CircularProgress } from "@mui/material";
 import EventCard from "@/components/events/EventCard";
+import { useEffect } from "react";
+import useEventRequestHandler from "@/hooks/use-event-request-handler";
 import useEvents from "@/hooks/use-events";
 
 const UpcomingEvents: React.FC = () => {
+  const { fetchAllEvents } = useEventRequestHandler();
   const { events, isLoading } = useEvents();
+
+  useEffect(() => {
+    fetchAllEvents();
+  }, []);
 
   const fetchEventsResult = isLoading ? (
     <CircularProgress size={64} className="text-white" />

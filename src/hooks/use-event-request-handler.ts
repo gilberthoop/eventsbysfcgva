@@ -1,6 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { Action } from "redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { RootState, fetchEvents } from "@/store";
 import { SFCEvent } from "@/types";
 
 const useEventRequestHandler = () => {
@@ -8,6 +12,18 @@ const useEventRequestHandler = () => {
   const [response, setResponse] = useState("");
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
+
+  const dispatch: ThunkDispatch<RootState, unknown, Action> = useDispatch();
+
+  const fetchAllEvents = async () => {
+    try {
+      await dispatch(fetchEvents());
+      setHasError(false);
+    } catch (e) {
+      console.error(e);
+      setHasError(true);
+    }
+  };
 
   const fetchEvent = async (eventId: string | string[]) => {
     try {
@@ -57,10 +73,27 @@ const useEventRequestHandler = () => {
     }
   };
 
+  const handleRemoveEvent = async (eventId: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(`/api/events?id=${eventId}`);
+      setResponse(response.data?.message);
+      setHasError(false);
+      setLoading(false);
+      await dispatch(fetchEvents());
+    } catch (e) {
+      console.error(e);
+      setResponse("Unable to delete event");
+      setHasError(true);
+    }
+  };
+
   return {
+    fetchAllEvents,
     fetchEvent,
     handleNewEventSubmit,
     handleEditEventSubmit,
+    handleRemoveEvent,
     loading,
     response,
     hasError,

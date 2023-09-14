@@ -13,10 +13,6 @@ const useEvents = () => {
 
   const dispatch: ThunkDispatch<RootState, unknown, Action> = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchEvents());
-  }, []);
-
   return { events, isLoading, error };
 };
 

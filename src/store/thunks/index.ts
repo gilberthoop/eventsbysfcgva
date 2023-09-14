@@ -9,7 +9,6 @@ const fetchEvents = createAsyncThunk("events/fetch", async () => {
     return response.data.events;
   } catch (err) {
     console.error(err);
-    throw err;
   }
 });
 
