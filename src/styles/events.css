@@ -29,7 +29,7 @@
 .events__card-header {
   background-color: #A1CCEB;
   color: #2C4E9F;
-  @apply flex flex-col justify-center items-center gap-y-1 h-max p-4 text-center rounded;
+  @apply flex flex-col justify-center items-center gap-y-1 w-full h-max p-4 text-center rounded;
   @apply md:p-4;
   @apply lg:text-2xl;
 }
@@ -39,7 +39,18 @@
   @apply md:pt-5;
 }
 
-.events__card-section button {
+.events__btn-action {
   color: #2C4E9F;
   text-decoration: underline;
+}
+
+.events__options {
+  background-color: #2671B9;
+  @apply py-3 pl-10 pr-14 w-fit flex flex-col absolute;
+  @apply sm:pr-20;
+  @apply lg:pr-24;
+}
+
+.events__options > button {
+  @apply my-2 text-white text-left;
 }
