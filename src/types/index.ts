@@ -12,8 +12,12 @@ export interface SFCEvent {
   isoEndScheduleFormat: string;
 }
 
+export interface SFCEventData extends SFCEvent {
+  _id: string;
+}
+
 export interface SFCEventState {
-  data: SFCEvent[];
+  data: SFCEventData[];
   isLoading: boolean;
   error: string | null;
 }
@@ -26,4 +30,9 @@ export interface DateTime {
 export enum FormAction {
   Add = "add",
   Edit = "edit",
+}
+
+export interface LoginParams {
+  username: string;
+  password: string;
 }

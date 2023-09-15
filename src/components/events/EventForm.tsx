@@ -42,6 +42,7 @@ const EventForm: React.FC<EventFormProps> = ({
   };
 
   const [formState, setFormState] = useState<SFCEvent>(initialFormState);
+  const [canceledEdit, setCanceledEdit] = useState(false);
   const router = useRouter();
 
   /**
@@ -64,8 +65,14 @@ const EventForm: React.FC<EventFormProps> = ({
     onEditEventSubmit(formState);
   };
 
+  const cancelEditEvent = () => {
+    setCanceledEdit(true);
+    router.push("/");
+  };
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (canceledEdit) return;
 
     switch (action) {
       case FormAction.Add:
@@ -223,7 +230,7 @@ const EventForm: React.FC<EventFormProps> = ({
         <div className="flex justify-between my-4">
           <button
             className="form__button form__button--cancel"
-            onClick={() => router.push("/")}
+            onClick={cancelEditEvent}
           >
             {loading ? <CircularProgress size={24} /> : "Cancel"}
           </button>

@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import useEventRequestHandler from "@/hooks/use-event-request-handler";
+import useAdmin from "@/hooks/use-admin";
 import EventForm from "@/components/events/EventForm";
 import { SFCEvent, FormAction } from "@/types";
 
 const EditEventPage: React.FC = () => {
   const { fetchEvent, handleEditEventSubmit, loading, response, hasError } =
     useEventRequestHandler();
+
+  useAdmin();
 
   const [formData, setformData] = useState<SFCEvent>();
 
