@@ -1,15 +1,23 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { LoginParams } from "@/utils/types";
+import { LoginParams } from "@/types";
 
-export default function useAuth() {
-  const [jwtToken, setJwtToken] = useState("");
+export default function useAdmin() {
   const [errors, setErrors] = useState("");
   const router = useRouter();
 
+  /**
+   * Check for user authentication
+   */
   useEffect(() => {
-    setJwtToken(document.cookie);
+    if (!document.cookie) {
+      router.push("/login");
+    }
+
+    if (router.route === "/login" && document.cookie) {
+      router.push("/");
+    }
   }, []);
 
   const handleAdminLogin = async (loginParams: LoginParams) => {
@@ -18,6 +26,7 @@ export default function useAuth() {
       const newToken = response?.data?.token;
       setCookie("authToken", newToken, 1);
       setErrors("");
+
       router.push("/");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error)
@@ -27,7 +36,7 @@ export default function useAuth() {
     }
   };
 
-  return { jwtToken, handleAdminLogin, errors };
+  return { handleAdminLogin, errors };
 }
 
 function setCookie(name: string, value: string, days: number) {

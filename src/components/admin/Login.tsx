@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LoginParams } from "@/utils/types";
+import { LoginParams } from "@/types";
 
 interface LoginProps {
   onLogin: (params: LoginParams) => void;
@@ -58,9 +58,11 @@ const Login: React.FC<LoginProps> = ({ onLogin, errorMessage }) => {
             required
           />
         </div>
-        <button type="submit" className="form__button">
-          Login
-        </button>
+        <div className="flex justify-center pt-5">
+          <button type="submit" className="form__button">
+            Login
+          </button>
+        </div>
       </form>
     </section>
   );
