@@ -45,6 +45,7 @@
 }
 
 .events__options {
+  animation: slideDown .4s;
   background-color: #2671B9;
   @apply py-3 pl-10 pr-14 w-fit flex flex-col absolute;
   @apply sm:pr-20;
@@ -53,4 +54,34 @@
 
 .events__options > button {
   @apply my-2 text-white text-left;
+}
+
+@keyframes slideUp {
+  from {
+    display: block;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.hide {
+  animation: slideUp 0.25s;
+  display: none;
+}
+
+
+@keyframes slideDown {
+  from {
+    display: none;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.show {
+  animation: slideDown 0.5s;
+  display: block;
 }
