@@ -109,7 +109,9 @@ const EventCard: React.FC<EventCardProps> = ({ details }) => {
         >
           {showDetails ? "Hide" : "Show"} details
         </button>
-        {showDetails && <div className="pt-2">{description}</div>}
+        <div className={`pt-2 ${showDetails ? "show" : "hide"}`}>
+          {description}
+        </div>
       </div>
     </section>
   );
