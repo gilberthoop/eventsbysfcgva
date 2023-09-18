@@ -1,8 +1,5 @@
-import { useEffect } from "react";
-import { Action } from "redux";
-import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-import { RootState, fetchEvents } from "@/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const useEvents = () => {
   const {
@@ -10,8 +7,6 @@ const useEvents = () => {
     isLoading,
     error,
   } = useSelector((state: RootState) => state.events);
-
-  const dispatch: ThunkDispatch<RootState, unknown, Action> = useDispatch();
 
   return { events, isLoading, error };
 };
