@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { LoginParams } from "@/types";
 
+type Login = (params: LoginParams) => void;
 interface LoginProps {
-  onLogin: (params: LoginParams) => void;
+  onLogin: Login;
   errorMessage: string;
 }
 
