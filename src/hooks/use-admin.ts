@@ -1,7 +1,11 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { LoginParams } from "@/types";
+
+const COOKIE_TOKEN_NAME = "authToken";
+const COOKIE_EXPIRY_DAYS = 7;
 
 export default function useAdmin() {
   const [errors, setErrors] = useState("");
@@ -11,20 +15,26 @@ export default function useAdmin() {
    * Check for user authentication
    */
   useEffect(() => {
-    if (!document.cookie) {
+    const authToken = Cookies.get(COOKIE_TOKEN_NAME);
+    if (!authToken) {
       router.push("/login");
     }
 
-    if (router.route === "/login" && document.cookie) {
+    if (router.route === "/login" && authToken) {
       router.push("/");
     }
   }, []);
 
+  /**
+   * Handle admin login request,
+   * setting token in the cookie that expires in 7 days.
+   * @param loginParams Login credentials
+   */
   const handleAdminLogin = async (loginParams: LoginParams) => {
     try {
       const response = await axios.post("/api/auth/login", loginParams);
       const newToken = response?.data?.token;
-      setCookie("authToken", newToken, 1);
+      Cookies.set(COOKIE_TOKEN_NAME, newToken, { expires: COOKIE_EXPIRY_DAYS });
       setErrors("");
 
       router.push("/");
@@ -37,13 +47,4 @@ export default function useAdmin() {
   };
 
   return { handleAdminLogin, errors };
-}
-
-function setCookie(name: string, value: string, days: number) {
-  const expires = new Date(
-    Date.now() + days * 24 * 60 * 60 * 1000
-  ).toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(
-    value
-  )}; expires=${expires}; path=/`;
 }
