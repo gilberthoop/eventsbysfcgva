@@ -1,0 +1,96 @@
+
+/* NAVIGATION SIDE BAR */
+.nav {
+  background-color: #2779BE;
+  @apply sticky top-0 left-0 w-full px-8 py-6;
+  @apply lg:relative lg:w-72 lg:py-9;
+}
+
+/* TOGGLE BUTTON AND ICON */
+.nav__toggle-btn {
+  @apply block;
+  @apply lg:hidden;
+}
+
+.nav__toggle-icon {
+  @apply block bg-white relative;
+  width: 32px;
+  height: 3px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav--open .nav__toggle-icon {
+  transform: rotate(45deg);
+}
+
+.nav--open .nav__toggle-icon::before {
+  top: 0;
+  transform: rotate(90deg);
+}
+
+.nav--open .nav__toggle-icon::after {
+  top: 0;
+  transform: rotate(90deg);
+}
+
+.nav__toggle-icon::before,
+.nav__toggle-icon::after {
+  @apply block w-full h-full bg-white absolute left-0;
+  content: "";
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav__toggle-icon::before {
+  top: -8px;
+}
+
+.nav__toggle-icon::after {
+  top: 8px;
+}
+
+/* SIDE BAR MENU CONTENT */
+.nav__sidebar {
+  background-color: #2779BE;
+  @apply fixed;
+}
+
+.nav__sidebar-mobile {
+  top: 51px;
+  animation: slide-in 0.25s ease forwards;
+
+  @apply absolute left-0 h-screen w-fit px-8 py-4;
+  @apply md:px-14;
+  @apply lg:py-8;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.nav__sidebar-mobile--hidden {
+  @apply hidden;
+  @apply lg:block;
+}
+
+.nav__list {
+  @apply flex flex-col gap-y-10 w-full;
+}
+
+.nav__list-item {
+  @apply text-white text-lg;
+}
+
+.nav__logo {
+  @apply flex justify-center content-center pb-8;
+}
+
+.nav__logo-img {
+  @apply w-16;
+}

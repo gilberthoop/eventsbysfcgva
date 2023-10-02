@@ -1,0 +1,5 @@
+/* Import CSS files  */
+@import './globals.css';
+@import './side-menu.css';
+@import './events.css';
+@import './form.css';
