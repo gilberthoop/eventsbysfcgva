@@ -1,6 +1,4 @@
-import "@/styles/globals.css";
-import "@/styles/form.css";
-import "@/styles/events.css";
+import "@/styles/app.css";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import type { AppProps } from "next/app";
