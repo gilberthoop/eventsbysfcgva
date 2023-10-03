@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import useAdmin from "./use-admin";
 
 const COOKIE_TOKEN_NAME = "authToken";
@@ -12,50 +13,68 @@ export interface IMenu {
 const useNavigation = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const { logout } = useAdmin();
+  const router = useRouter();
 
   const mainMenuItems: IMenu[] = [
     {
       title: "About Us",
-      href: "/about",
+      href: "#about",
     },
     {
       title: "Mission and Vision",
-      href: "/mission-and-vision",
+      href: "#mission-and-vision",
     },
     {
       title: "Upcoming Events",
-      href: "/events",
+      href: "#events",
     },
     {
       title: "Ministry Programs",
-      href: "/programs",
+      href: "#programs",
     },
     {
       title: "Follow Us",
-      href: "/contact",
+      href: "#contact",
     },
   ];
 
-  // Get the menu items depending on the user authentication
+  /**
+   * Get the menu items depending on the user role.
+   * Admins can add a new event and log out from the menu.
+   * Non-admins see the menu items including admin login
+   * @returns Menu items
+   */
   const getMenuItems = (): IMenu[] => {
     if (loggedIn) {
       return [
-        ...mainMenuItems,
+        {
+          title: "Add new event",
+          href: "/new-event",
+        },
         {
           title: "Logout",
           href: "#",
           action: logout,
         },
       ];
-    } else {
+    }
+
+    if (router.pathname === "/login") {
       return [
-        ...mainMenuItems,
         {
-          title: "Admin",
-          href: "/login",
+          title: "Home",
+          href: "/",
         },
       ];
     }
+
+    return [
+      ...mainMenuItems,
+      {
+        title: "Admin",
+        href: "/login",
+      },
+    ];
   };
 
   // Determine admin login status for rendering menu items
