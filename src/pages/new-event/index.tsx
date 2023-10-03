@@ -1,5 +1,5 @@
 import useEventRequestHandler from "@/hooks/use-event-request-handler";
-import useAdmin from "@/hooks/use-admin";
+import useAuthorization from "@/hooks/use-authorization";
 import Eventform from "@/components/events/EventForm";
 import { FormAction } from "@/types";
 
@@ -7,7 +7,7 @@ function NewEventPage() {
   const { handleNewEventSubmit, loading, response, hasError } =
     useEventRequestHandler();
 
-  useAdmin();
+  useAuthorization();
 
   return (
     <div className="p-6 sm:py-16 sm:px-20">
