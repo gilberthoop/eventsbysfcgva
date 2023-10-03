@@ -1,9 +1,11 @@
 import Login from "@/components/admin/Login";
 import useAdmin from "@/hooks/use-admin";
+import useAuthorization from "@/hooks/use-authorization";
 import { LoginParams } from "@/types";
 
 const LoginPage: React.FC = () => {
   const { handleAdminLogin, errors } = useAdmin();
+  useAuthorization();
 
   return (
     <section className="p-6 sm:py-16 sm:px-20">

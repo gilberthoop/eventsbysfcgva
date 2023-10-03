@@ -12,20 +12,6 @@ export default function useAdmin() {
   const router = useRouter();
 
   /**
-   * Check for user authentication
-   */
-  useEffect(() => {
-    const authToken = Cookies.get(COOKIE_TOKEN_NAME);
-    if (!authToken) {
-      router.push("/login");
-    }
-
-    if (router.route === "/login" && authToken) {
-      router.push("/");
-    }
-  }, []);
-
-  /**
    * Handle admin login request,
    * setting token in the cookie that expires in 7 days.
    * @param loginParams Login credentials
@@ -46,5 +32,20 @@ export default function useAdmin() {
     }
   };
 
-  return { handleAdminLogin, errors };
+  const logout = async () => {
+    try {
+      Cookies.remove(COOKIE_TOKEN_NAME);
+
+      // Redirect accordingly
+      if (router.pathname === "/") {
+        window.location.reload();
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error logging out admin. ", error);
+    }
+  };
+
+  return { handleAdminLogin, logout, errors };
 }

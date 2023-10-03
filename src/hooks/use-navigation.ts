@@ -1,14 +1,17 @@
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
+import useAdmin from "./use-admin";
 
 const COOKIE_TOKEN_NAME = "authToken";
 export interface IMenu {
   title: string;
   href: string;
+  action?: () => void;
 }
 
 const useNavigation = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const { logout } = useAdmin();
 
   const mainMenuItems: IMenu[] = [
     {
@@ -40,7 +43,8 @@ const useNavigation = () => {
         ...mainMenuItems,
         {
           title: "Logout",
-          href: "/logout",
+          href: "#",
+          action: logout,
         },
       ];
     } else {
