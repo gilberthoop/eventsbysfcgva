@@ -35,7 +35,9 @@ const SideMenuBar: React.FC = () => {
         <ul className="nav__list">
           {menuItems.map((link, index) => (
             <li className="nav__list-item" key={index}>
-              <a href={link.href}>{link.title}</a>
+              <a href={link.href} onClick={link.action}>
+                {link.title}
+              </a>
             </li>
           ))}
         </ul>
