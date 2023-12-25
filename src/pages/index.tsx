@@ -5,9 +5,7 @@ export default function Home() {
   return (
     <main className="block lg:flex">
       <SideMenuBar />
-      <section className="w-full">
-        <UpcomingEvents />
-      </section>
+      <UpcomingEvents />
     </main>
   );
 }
