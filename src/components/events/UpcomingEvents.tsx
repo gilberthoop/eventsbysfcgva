@@ -26,7 +26,7 @@ const UpcomingEvents: React.FC = () => {
   );
 
   return (
-    <section className="event">
+    <section className="event w-full">
       <header className="event__header">Upcoming Events</header>
 
       <section className="event__body">

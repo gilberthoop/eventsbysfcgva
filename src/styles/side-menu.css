@@ -3,7 +3,7 @@
 .nav {
   background-color: #2779BE;
   @apply sticky top-0 left-0 w-full px-8 py-6;
-  @apply lg:relative lg:w-72 lg:py-9;
+  @apply lg:w-72 lg:py-9 lg:h-screen;
 }
 
 /* TOGGLE BUTTON AND ICON */
@@ -51,7 +51,6 @@
 /* SIDE BAR MENU CONTENT */
 .nav__sidebar {
   background-color: #2779BE;
-  @apply fixed;
 }
 
 .nav__sidebar-mobile {
@@ -80,7 +79,7 @@
 }
 
 .nav__list {
-  @apply flex flex-col gap-y-10 w-full;
+  @apply flex flex-col gap-y-12;
 }
 
 .nav__list-item {
